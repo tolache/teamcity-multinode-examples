@@ -1,0 +1,5 @@
+teamcity-multinode-*/data/*
+!teamcity-multinode-*/data/config/database.properties
+teamcity-multinode-*/pgdata
+teamcity-multinode-*/teamcity-node*
+teamcity-multinode-*/teamcity-agent*

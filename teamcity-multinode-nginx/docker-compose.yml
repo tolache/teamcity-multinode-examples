@@ -1,0 +1,73 @@
+version: '3.1'
+ 
+
+# Default ${TEAMCITY_VERSION} is defined in .env file
+
+# ./pgdata - Posgres DB data
+# ./data - TeamCity data directory
+# ./teamcity-node*-data - node-specific data directories
+# ./teamcity-node1-logs - logs of primary TeamCity server node
+# ./teamcity-node2-logs - logs of secondary TeamCity server node
+# ./teamcity-agent*-conf - conf directories for the build agents
+
+services:
+  db:
+    image: postgres
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: test
+      POSTGRES_DB: buildserver
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:1.19
+    ports:
+      - 8222:8222
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+
+  teamcity-node1:
+    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    volumes:
+      - ./data:/data/teamcity_server/datadir
+      - ./teamcity-node1-data:/data/teamcity_server/node_datadir
+      - ./teamcity-node1-logs:/opt/teamcity/logs
+    ports:
+      - 8111:8111
+    environment:
+      TEAMCITY_SERVER_OPTS: -Dteamcity.server.nodeId=node1 -Dteamcity.server.rootURL=http://teamcity-node1:8111 -Dteamcity.data.path=/data/teamcity_server/datadir -Dteamcity.node.data.path=/data/teamcity_server/node_datadir
+
+  teamcity-node2:
+    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    volumes:
+      - ./data:/data/teamcity_server/datadir
+      - ./teamcity-node2-data:/data/teamcity_server/node_datadir
+      - ./teamcity-node2-logs:/opt/teamcity/logs
+    ports:
+      - 8112:8111
+    environment:
+      TEAMCITY_SERVER_OPTS: -Dteamcity.server.nodeId=node2 -Dteamcity.server.rootURL=http://teamcity-node2:8111 -Dteamcity.data.path=/data/teamcity_server/datadir -Dteamcity.node.data.path=/data/teamcity_server/node_datadir
+    
+
+  teamcity-agent1:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}
+    environment:
+      SERVER_URL: http://nginx:8222
+      AGENT_NAME: teamcity-agent1
+    volumes:
+      - ./teamcity-agent1-conf:/data/teamcity_agent/conf
+      - ./teamcity-agent1-logs:/opt/buildagent/logs/
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  teamcity-agent2:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}
+    environment:
+      SERVER_URL: http://nginx:8222
+      AGENT_NAME: teamcity-agent2
+    volumes:
+      - ./teamcity-agent2-conf:/data/teamcity_agent/conf
+      - ./teamcity-agent2-logs:/opt/buildagent/logs/
+      - /var/run/docker.sock:/var/run/docker.sock
