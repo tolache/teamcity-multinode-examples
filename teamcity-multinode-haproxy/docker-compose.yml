@@ -1,5 +1,4 @@
 version: '3.1'
- 
 
 # Default ${TEAMCITY_VERSION} is defined in .env file
 
@@ -12,7 +11,7 @@ version: '3.1'
 
 services:
   db:
-    image: postgres
+    image: postgres:15
     ports:
       - 5433:5432
     environment:
