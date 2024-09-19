@@ -1,5 +1,3 @@
-version: '3.1'
-
 # Default ${TEAMCITY_VERSION} is defined in .env file
 
 # ./pgdata - Posgres DB data
@@ -49,7 +47,6 @@ services:
       - 8112:8111
     environment:
       TEAMCITY_SERVER_OPTS: -Dteamcity.server.nodeId=node2 -Dteamcity.server.rootURL=http://teamcity-node2:8111 -Dteamcity.data.path=/data/teamcity_server/datadir -Dteamcity.node.data.path=/data/teamcity_server/node_datadir
-    
 
   teamcity-agent1:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}
