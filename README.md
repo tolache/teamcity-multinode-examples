@@ -28,12 +28,7 @@ For details on volumes, created folders, and logs see the `docker-compose.yml` f
    2. Go to [http://localhost:8112](http://localhost:8112) and paste the superuser token.
    3. Click **Proceed** to use the default data directory. While the node is initializing, you can proceed to the next step.
 4. Log into TeamCity through the proxy [http://localhost:8222](http://localhost:8222) and authorize the connected agents.
-
-Next, open [http://localhost:8111](http://localhost:8111) for the initial setup.
-
-After creating a user, visit ["Agents -> Unauthorized"](http://localhost:8111/agents.html?tab=unauthorizedAgents) to authorize the build agent.
-
-See [http://localhost:8111/admin/admin.html?item=nodesConfiguration](http://localhost:8111/admin/admin.html?item=nodesConfiguration) for nodes configuration.
+5. (Optional) See [http://localhost:8222/admin/admin.html?item=nodesConfiguration](http://localhost:8222/admin/admin.html?item=nodesConfiguration) for nodes configuration.
 
 ## To shutdown
 
